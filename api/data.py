@@ -42,6 +42,15 @@ YAHOO_MAP = {
     'VTI': 'VTI', 'SPY': 'SPY', 'QQQ': 'QQQ',
     'GLD': 'GLD', 'SLV': 'SLV', 'PPLT': 'PPLT', 'PALL': 'PALL',
     'DBC': 'DBC', 'GSG': 'GSG', 'GCC': 'GCC',
+    # 贵金属现货 (Yahoo)
+    'XAU': 'GC=F',  # 黄金期货
+    'XAG': 'SI=F',  # 白银期货
+    'XPT': 'PL=F',  # 铂金期货
+    'XPD': 'PA=F',  # 钯金期货
+    # 能源期货
+    'WTI': 'CL=F',
+    'BRENT': 'BZ=F',
+    'NATGAS': 'NG=F',
     'EFA': 'EFA', 'EZU': 'EZU', 'EWU': 'EWU', 'EWG': 'EWG',
     'EWQ': 'EWQ', 'EWI': 'EWI', 'EWP': 'EWP', 'EWC': 'EWC', 'EWJ': 'EWJ',
     'EEM': 'EEM', 'EMXC': 'EMXC', 'EWY': 'EWY', 'EWS': 'EWS',
