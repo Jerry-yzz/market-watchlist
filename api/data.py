@@ -58,7 +58,7 @@ YAHOO_MAP = {
 
 # 缓存
 cache = {'data': {}, 'time': None}
-CACHE_DURATION = 300  # 5分钟缓存
+CACHE_DURATION = 10  # 10秒缓存（强制刷新）
 
 def fetch_stooq_data(symbol):
     """从 Stooq 获取数据（主要用于期货）"""
@@ -66,23 +66,27 @@ def fetch_stooq_data(symbol):
         stooq_symbol = STOOQ_MAP.get(symbol, symbol)
         # Stooq CSV API
         url = f"https://stooq.com/q/l/?s={stooq_symbol}&f=sd2t2ohlcv&h&e=csv"
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=15)
         
         if response.status_code == 200:
             lines = response.text.strip().split('\n')
             if len(lines) >= 2:
                 # 解析CSV - 表头: Symbol,Date,Time,Open,High,Low,Close,Volume
-                # Close 在第 7 列 (索引 6)
                 data_lines = lines[1:]  # 跳过表头
                 prices = []
                 for line in data_lines[:100]:  # 取最近100天
                     parts = line.split(',')
                     if len(parts) >= 7:  # 确保有足够的列
                         try:
-                            close = float(parts[6])  # Close 在索引 6
-                            prices.append(close)
-                        except:
-                            pass
+                            # 处理 \r 字符并检查 N/D (无数据)
+                            close_str = parts[6].strip().replace('\r', '')
+                            if close_str in ['N/D', '', 'null', 'None']:
+                                continue
+                            close = float(close_str)  # Close 在索引 6
+                            if close > 0:  # 确保价格有效
+                                prices.append(close)
+                        except (ValueError, IndexError):
+                            continue
                 
                 if len(prices) >= 2:
                     current = prices[0]
