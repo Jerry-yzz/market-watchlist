@@ -125,6 +125,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 11px;
+            table-layout: auto;
         }
         
         th {
@@ -136,6 +137,11 @@
             color: var(--text-muted);
             border-bottom: 1px solid var(--border-color);
             white-space: nowrap;
+        }
+        
+        th:nth-child(2) {
+            width: auto;
+            min-width: 200px;
         }
         
         th:last-child { text-align: right; }
@@ -246,9 +252,15 @@
             .main-header h1 { font-size: 18px; }
             .header-desc { font-size: 11px; }
             .section-title { font-size: 12px; }
-            .name { 
+            table { table-layout: auto; }
+            th:nth-child(2) {
+                width: auto;
                 min-width: 180px;
-                max-width: 200px;
+            }
+            .name { 
+                width: auto;
+                min-width: 180px;
+                max-width: none;
             }
             .name .ename {
                 font-size: 10px;
