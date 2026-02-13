@@ -95,14 +95,12 @@
         /* 内容区 */
         .container {
             padding: 0;
-            overflow-x: auto;
         }
         
         /* 分组标题 */
         .section {
             margin: 0;
             border-bottom: 2px solid var(--border-color);
-            width: 100%;
             min-width: fit-content;
         }
         
@@ -113,10 +111,7 @@
             font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
-            width: 100%;
-            min-width: 100%;
-            box-sizing: border-box;
-            display: block;
+            white-space: nowrap;
         }
         
         .section-desc {
@@ -125,10 +120,7 @@
             font-size: 11px;
             color: var(--text-secondary);
             border-bottom: 1px solid var(--border-color);
-            width: 100%;
-            min-width: 100%;
-            box-sizing: border-box;
-            display: block;
+            white-space: nowrap;
         }
         
         /* 表格 */
@@ -467,25 +459,24 @@
             
             for (const [sectionName, sectionData] of Object.entries(sections)) {
                 html += `
-                    <div class="section" style="display:flex;flex-direction:column">
+                    <div class="section">
                         <div class="section-title">${sectionName}</div>
                         <div class="section-desc">${sectionData.desc}</div>
-                        <div style="overflow-x:auto;width:100%">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>代码</th>
-                                        <th>名称</th>
-                                        <th>价格</th>
-                                        <th>1D%</th>
-                                        <th>50D%</th>
-                                        <th>REL5</th>
-                                        <th>REL20</th>
-                                        <th>Trend</th>
-                                        <th style="text-align:right">YTD%</th>
-                                    </tr>
-                                </thead>
-                                <tbody>`;
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>代码</th>
+                                    <th>名称</th>
+                                    <th>价格</th>
+                                    <th>1D%</th>
+                                    <th>50D%</th>
+                                    <th>REL5</th>
+                                    <th>REL20</th>
+                                    <th>Trend</th>
+                                    <th style="text-align:right">YTD%</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
                 
                 for (const ticker of sectionData.items) {
                     const d = currentData[ticker] || {};
@@ -517,7 +508,7 @@
                         </tr>`;
                 }
                 
-                html += '</tbody></table></div></div>';
+                html += '</tbody></table></div>';
             }
             
             document.getElementById('container').innerHTML = html;
