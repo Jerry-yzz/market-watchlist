@@ -58,7 +58,7 @@ YAHOO_MAP = {
 
 # 缓存
 cache = {'data': {}, 'time': None}
-CACHE_DURATION = 10  # 10秒缓存（强制刷新）
+CACHE_DURATION = 300  # 5分钟缓存
 
 def fetch_stooq_data(symbol):
     """从 Stooq 获取数据（主要用于期货）"""
