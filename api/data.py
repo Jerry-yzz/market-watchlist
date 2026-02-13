@@ -19,20 +19,20 @@ ETF_CONFIG = {
     '宏观指标': ['VIX', 'DXY', 'US10Y', 'US02Y', 'US30Y', 'T10Y2Y', 'HY_OAS']
 }
 
-# Stooq 代码映射
+# Stooq 代码映射 - 使用正确的合约代码
 STOOQ_MAP = {
-    # 贵金属
-    'XAU': 'GC.F',      # 黄金期货
-    'XAG': 'SI.F',      # 白银期货
-    'XPT': 'PL.F',      # 铂金期货
-    'XPD': 'PA.F',      # 钯金期货
+    # 贵金属 - 使用主连合约
+    'XAU': 'GC.F',      # 黄金期货主连
+    'XAG': 'SI.F',      # 白银期货主连
+    'XPT': 'PL.F',      # 铂金期货主连
+    'XPD': 'PA.F',      # 钯金期货主连
     # 工业金属
-    'COPPER': 'HG.F',   # 铜期货
-    'ALUMINUM': 'ALI.F', # 铝期货
-    # 能源
-    'WTI': 'CL.F',      # WTI原油
-    'BRENT': 'BZ.F',    # 布伦特原油
-    'NATGAS': 'NG.F',   # 天然气
+    'COPPER': 'HG.F',   # 铜期货主连
+    'ALUMINUM': 'ALI.F', # 铝期货主连
+    # 能源 - 使用期货主连
+    'WTI': 'CL.F',      # WTI原油期货主连
+    'BRENT': 'BZ.F',    # 布伦特原油期货主连
+    'NATGAS': 'NG.F',   # 天然气期货主连
 }
 
 # Yahoo Finance 代码映射
@@ -58,7 +58,7 @@ YAHOO_MAP = {
 
 # 缓存
 cache = {'data': {}, 'time': None}
-CACHE_DURATION = 300  # 5分钟缓存
+CACHE_DURATION = 60  # 1分钟缓存（测试阶段，后续可改回300）
 
 def fetch_stooq_data(symbol):
     """从 Stooq 获取数据（主要用于期货）"""
@@ -71,14 +71,15 @@ def fetch_stooq_data(symbol):
         if response.status_code == 200:
             lines = response.text.strip().split('\n')
             if len(lines) >= 2:
-                # 解析CSV
-                data_lines = lines[1:]
+                # 解析CSV - 表头: Symbol,Date,Time,Open,High,Low,Close,Volume
+                # Close 在第 7 列 (索引 6)
+                data_lines = lines[1:]  # 跳过表头
                 prices = []
                 for line in data_lines[:100]:  # 取最近100天
                     parts = line.split(',')
-                    if len(parts) >= 5:
+                    if len(parts) >= 7:  # 确保有足够的列
                         try:
-                            close = float(parts[4])
+                            close = float(parts[6])  # Close 在索引 6
                             prices.append(close)
                         except:
                             pass
