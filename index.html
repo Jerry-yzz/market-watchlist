@@ -95,6 +95,7 @@
         /* 内容区 */
         .container {
             padding: 0;
+            overflow-x: auto;
         }
         
         /* 分组标题 */
@@ -102,6 +103,7 @@
             margin: 0;
             border-bottom: 2px solid var(--border-color);
             width: 100%;
+            min-width: fit-content;
         }
         
         .section-title {
@@ -112,7 +114,9 @@
             font-weight: 700;
             text-transform: uppercase;
             width: 100%;
+            min-width: 100%;
             box-sizing: border-box;
+            display: block;
         }
         
         .section-desc {
@@ -122,12 +126,15 @@
             color: var(--text-secondary);
             border-bottom: 1px solid var(--border-color);
             width: 100%;
+            min-width: 100%;
             box-sizing: border-box;
+            display: block;
         }
         
         /* 表格 */
         table {
             width: 100%;
+            min-width: 100%;
             border-collapse: collapse;
             font-size: 11px;
             table-layout: auto;
