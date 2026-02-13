@@ -157,10 +157,8 @@
         .name {
             color: var(--text-secondary);
             font-size: 10px;
-            max-width: 180px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            max-width: 280px;
+            line-height: 1.3;
         }
         
         .price {
@@ -308,26 +306,65 @@
             }
         };
 
-        const etfNames = {
-            'ACWI': 'MSCI全球ETF', 'VT': '先锋全球股票ETF', 'ACWX': 'MSCI全球(除美)ETF',
-            'VTI': '先锋全美股票ETF', 'SPY': '标普500ETF', 'QQQ': '纳斯达克100ETF',
-            'GLD': 'SPDR黄金ETF', 'SLV': 'iShares白银ETF', 'PPLT': '铂金ETF', 'PALL': '钯金ETF',
-            'DBC': '德银商品指数ETF', 'GSG': 'iShares标普高盛商品ETF', 'GCC': 'GreenHaven连续商品ETF',
-            'EFA': 'MSCI欧澳远东ETF', 'EZU': 'MSCI欧元区ETF', 'EWU': 'MSCI英国ETF',
-            'EWG': 'MSCI德国ETF', 'EWQ': 'MSCI法国ETF', 'EWI': 'MSCI意大利ETF',
-            'EWP': 'MSCI西班牙ETF', 'EWC': 'MSCI加拿大ETF', 'EWJ': 'MSCI日本ETF',
-            'EEM': 'MSCI新兴市场ETF', 'EMXC': '新兴市场(除中)ETF', 'EWY': 'MSCI韩国ETF',
-            'EWS': 'MSCI新加坡ETF', 'EIDO': 'MSCI印尼ETF', 'EZA': 'MSCI南非ETF',
-            'EWM': 'MSCI马来西亚ETF', 'INDA': 'MSCI印度ETF', 'ARGT': 'MSCI阿根廷ETF',
-            'VNM': '越南ETF', 'EWW': 'MSCI墨西哥ETF', 'EWZ': 'MSCI巴西ETF', 'EWT': 'MSCI台湾ETF',
-            'MCHI': 'MSCI中国ETF', 'FXI': '中国大盘股ETF', 'KWEB': '中国海外互联网ETF', 'ASHR': '沪深300ETF',
-            'XAU': '现货黄金', 'XAG': '现货白银', 'XPT': '现货铂金', 'XPD': '现货钯金',
-            'COPPER': '铜期货', 'ALUMINUM': '铝期货',
-            'WTI': 'WTI原油', 'BRENT': '布伦特原油', 'NATGAS': '天然气',
-            'BTC': '比特币', 'ETH': '以太坊', 'SOL': 'Solana',
-            'VIX': '恐慌指数', 'DXY': '美元指数', 'US10Y': '美国10年期国债',
-            'US02Y': '美国2年期国债', 'US30Y': '美国30年期国债',
-            'T10Y2Y': '美债10Y-2Y利差', 'HY_OAS': '高收益债利差'
+        const etfDetails = {
+            'ACWI': { name: 'iShares MSCI ACWI ETF', desc: '全球股票市场风险偏好' },
+            'VT': { name: 'Vanguard Total World Stock Index Fund ETF', desc: '全球股票跨地域配置' },
+            'ACWX': { name: 'iShares MSCI ACWI ex US ETF', desc: '全球除美股外市场风险偏好' },
+            'VTI': { name: 'Vanguard Total Stock Market Index Fund ETF', desc: '美股全市场整体风险偏好' },
+            'SPY': { name: 'SPDR S&P 500 ETF Trust', desc: '美股大盘蓝筹风格表现' },
+            'QQQ': { name: 'Invesco QQQ Trust', desc: '纳斯达克科技股风险偏好' },
+            'EFA': { name: 'iShares MSCI EAFE ETF', desc: '发达市场(欧/澳/远东)风险偏好' },
+            'EZU': { name: 'iShares MSCI Eurozone ETF', desc: '欧元区股市风险偏好' },
+            'EWU': { name: 'iShares MSCI United Kingdom ETF', desc: '英国股市与英镑资产风向' },
+            'EWG': { name: 'iShares MSCI Germany ETF', desc: '德国制造业与出口周期风向' },
+            'EWQ': { name: 'iShares MSCI France ETF', desc: '法国大盘风格表现' },
+            'EWI': { name: 'iShares MSCI Italy ETF', desc: '意大利风险偏好与金融权重风向' },
+            'EWP': { name: 'iShares MSCI Spain ETF', desc: '西班牙股市景气风向' },
+            'EWC': { name: 'iShares MSCI Canada ETF', desc: '加拿大资源+金融结构风向' },
+            'EWJ': { name: 'iShares MSCI Japan ETF', desc: '日本股市与日元敏感风向' },
+            'EEM': { name: 'iShares MSCI Emerging Markets ETF', desc: '新兴市场整体风险偏好' },
+            'EMXC': { name: 'iShares MSCI Emerging Markets ex China ETF', desc: '新兴市场(除中国)表现' },
+            'EWY': { name: 'iShares MSCI South Korea ETF', desc: '韩国半导体周期风向' },
+            'EWS': { name: 'iShares MSCI Singapore ETF', desc: '新加坡金融与航运风向' },
+            'EIDO': { name: 'iShares MSCI Indonesia ETF', desc: '印尼资源与内需风向' },
+            'EZA': { name: 'iShares MSCI South Africa ETF', desc: '南非资源周期与汇率敏感风向' },
+            'EWM': { name: 'iShares MSCI Malaysia ETF', desc: '马来西亚出口与商品链风向' },
+            'INDA': { name: 'iShares MSCI India ETF', desc: '印度成长与内需风向' },
+            'ARGT': { name: 'Global X MSCI Argentina ETF', desc: '阿根廷高波动政策风暴风向' },
+            'VNM': { name: 'VanEck Vietnam ETF', desc: '越南制造业转移受益风向' },
+            'EWW': { name: 'iShares MSCI Mexico ETF', desc: '墨西哥制造业与近岸外包风向' },
+            'EWZ': { name: 'iShares MSCI Brazil ETF', desc: '巴西资源+利率敏感风向' },
+            'EWT': { name: 'iShares MSCI Taiwan ETF', desc: '台湾半导体链核心风向' },
+            'MCHI': { name: 'iShares MSCI China ETF', desc: '中概股市场风险偏好' },
+            'FXI': { name: 'iShares China Large-Cap ETF', desc: '中国大盘蓝筹(金融/央企)风向' },
+            'KWEB': { name: 'KraneShares CSI China Internet ETF', desc: '中国互联网平台监管风向' },
+            'ASHR': { name: 'Xtrackers Harvest CSI 300 China A-Shs ETF', desc: 'A股沪深300核心资产' },
+            'GLD': { name: 'SPDR Gold Shares', desc: '实物黄金信托价格' },
+            'SLV': { name: 'iShares Silver Trust', desc: '实物白银信托价格' },
+            'PPLT': { name: 'Aberdeen Standard Physical Platinum Shares ETF', desc: '实物铂金信托价格' },
+            'PALL': { name: 'Aberdeen Standard Physical Palladium Shares ETF', desc: '实物钯金信托价格' },
+            'DBC': { name: 'Invesco DB Commodity Index Tracking Fund', desc: '彭博大宗商品指数跟踪' },
+            'GSG': { name: 'iShares S&P GSCI Commodity-Indexed Trust', desc: '标普GSCI商品指数跟踪' },
+            'GCC': { name: 'WisdomTree Enhanced Commodity Strategy Fund', desc: '连续商品指数增强策略' },
+            'XAU': { name: 'Gold Spot', desc: '现货黄金期货主力合约' },
+            'XAG': { name: 'Silver Spot', desc: '现货白银期货主力合约' },
+            'XPT': { name: 'Platinum Spot', desc: '现货铂金期货主力合约' },
+            'XPD': { name: 'Palladium Spot', desc: '现货钯金期货主力合约' },
+            'COPPER': { name: 'Copper Futures', desc: '伦铜期货主力合约' },
+            'ALUMINUM': { name: 'Aluminum Futures', desc: '伦铝期货主力合约' },
+            'WTI': { name: 'WTI Crude Oil', desc: 'WTI原油期货主力合约' },
+            'BRENT': { name: 'Brent Crude Oil', desc: '布伦特原油期货主力合约' },
+            'NATGAS': { name: 'Natural Gas', desc: '美国天然气期货主力合约' },
+            'BTC': { name: 'Bitcoin', desc: '比特币美元价格' },
+            'ETH': { name: 'Ethereum', desc: '以太坊美元价格' },
+            'SOL': { name: 'Solana', desc: 'Solana美元价格' },
+            'VIX': { name: 'CBOE Volatility Index', desc: '标普500波动率恐慌指数' },
+            'DXY': { name: 'U.S. Dollar Index', desc: '美元指数一揽子货币' },
+            'US10Y': { name: 'US Treasury 10Y Yield', desc: '美国10年期国债收益率' },
+            'US02Y': { name: 'US Treasury 2Y Yield', desc: '美国2年期国债收益率' },
+            'US30Y': { name: 'US Treasury 30Y Yield', desc: '美国30年期国债收益率' },
+            'T10Y2Y': { name: '10Y-2Y Yield Spread', desc: '美债10Y-2Y期限利差' },
+            'HY_OAS': { name: 'High Yield OAS', desc: '高收益债信用利差' }
         };
 
         let currentData = {};
@@ -385,10 +422,15 @@
                     
                     const priceStr = price >= 1000 ? price.toFixed(2) : price >= 1 ? price.toFixed(2) : price.toFixed(4);
                     
+                    const details = etfDetails[ticker] || { name: ticker, desc: '' };
+                    
                     html += `
                         <tr>
                             <td class="ticker">${ticker}</td>
-                            <td class="name">${etfNames[ticker] || ''}</td>
+                            <td class="name">
+                                <div style="font-weight:500;color:var(--text-primary)">${details.name}</div>
+                                <div style="font-size:10px;color:var(--text-secondary);margin-top:2px">${details.desc}</div>
+                            </td>
                             <td class="price">${priceStr}</td>
                             <td class="change ${change1d >= 0 ? 'positive' : 'negative'}">${change1d >= 0 ? '+' : ''}${change1d.toFixed(2)}%</td>
                             <td class="change ${change50d >= 0 ? 'positive' : 'negative'}">${change50d >= 0 ? '+' : ''}${change50d.toFixed(2)}%</td>
