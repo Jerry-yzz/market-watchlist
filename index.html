@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>市场追踪看板 - Market Watchlist</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.4;
+            font-size: 13px;
+        }
+        .header {
+            background: #000;
+            color: #fff;
+            padding: 15px 20px;
+            border-bottom: 3px solid #FFB800;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .header-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #888;
+        }
+        .header-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .refresh-btn {
+            background: #FFB800;
+            color: #000;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .refresh-btn:hover {
+            background: #ffcc00;
+        }
+        .container {
+            max-width: 100%;
+            padding: 0;
+        }
+        .section {
+            margin-bottom: 2px;
+            background: #141414;
+        }
+        .section-header {
+            background: linear-gradient(90deg, #FFB800 0%, #FF9500 100%);
+            color: #000;
+            padding: 8px 15px;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        th {
+            background: #1a1a1a;
+            padding: 10px 8px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            color: #888;
+            border-bottom: 1px solid #333;
+            white-space: nowrap;
+        }
+        th:last-child { text-align: right; }
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #222;
+            vertical-align: middle;
+        }
+        tr:hover { background: #1a1a1a; }
+        .ticker {
+            font-weight: 700;
+            color: #fff;
+            font-size: 13px;
+        }
+        .name {
+            color: #888;
+            font-size: 11px;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .price {
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            color: #fff;
+            font-size: 13px;
+        }
+        .change {
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        .positive { color: #00d084; }
+        .negative { color: #ff4757; }
+        .neutral { color: #888; }
+        .sparkline { width: 60px; height: 25px; }
+        .ytd {
+            text-align: right;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            padding-right: 10px;
+            font-size: 12px;
+        }
+        .loading {
+            text-align: center;
+            padding: 100px 20px;
+            color: #666;
+        }
+        .loading-spinner {
+            border: 3px solid #333;
+            border-top: 3px solid #FFB800;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .error {
+            text-align: center;
+            padding: 100px 20px;
+            color: #ff4757;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #555;
+            font-size: 11px;
+            background: #000;
+            border-top: 1px solid #222;
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 18px; }
+            .header-meta { font-size: 10px; gap: 10px; }
+            th, td { padding: 6px 4px; font-size: 11px; }
+            .sparkline { width: 50px; height: 20px; }
+            .name { max-width: 100px; font-size: 10px; }
+            .ticker { font-size: 12px; }
+            .price { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-top">
+            <h1>📊 MARKET WATCHLIST</h1>
+            <button class="refresh-btn" onclick="fetchData()">🔄 刷新</button>
+        </div>
+        <div class="header-meta">
+            <span>📅 <span id="currentDate">--</span></span>
+            <span>⏱️ 更新: <span id="lastUpdate">--</span></span>
+            <span>📈 数据源: Yahoo Finance / Stooq</span>
+        </div>
+    </div>
+    
+    <div class="container" id="container">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <div>正在加载市场数据...</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div> Market Watchlist © 2026 | 仅供学习交流，不构成投资建议</div>
+    </div>
+
+    <script>
+        // ETF 配置
+        const etfConfig = {
+            '全球市场': ['ACWI', 'VT', 'ACWX'],
+            '美国市场': ['VTI', 'SPY', 'QQQ'],
+            '商品ETF': ['GLD', 'SLV', 'PPLT', 'PALL', 'DBC', 'GSG', 'GCC'],
+            '发达市场': ['EFA', 'EZU', 'EWU', 'EWG', 'EWQ', 'EWI', 'EWP', 'EWC', 'EWJ'],
+            '新兴市场': ['EEM', 'EMXC', 'EWY', 'EWS', 'EIDO', 'EZA', 'EWM', 'INDA', 'ARGT', 'VNM', 'EWW', 'EWZ', 'EWT'],
+            '中国市场': ['MCHI', 'FXI', 'KWEB', 'ASHR'],
+            '贵金属现货': ['XAU', 'XAG', 'XPT', 'XPD'],
+            '工业金属': ['COPPER', 'ALUMINUM'],
+            '能源': ['WTI', 'BRENT', 'NATGAS'],
+            '加密货币': ['BTC', 'ETH', 'SOL'],
+            '宏观指标': ['VIX', 'DXY', 'US10Y', 'US02Y', 'US30Y', 'T10Y2Y', 'HY_OAS']
+        };
+
+        const etfNames = {
+            'ACWI': 'MSCI全球ETF', 'VT': '先锋全球股票ETF', 'ACWX': 'MSCI全球(除美)ETF',
+            'VTI': '先锋全美股票ETF', 'SPY': '标普500ETF', 'QQQ': '纳斯达克100ETF',
+            'GLD': 'SPDR黄金ETF', 'SLV': 'iShares白银ETF', 'PPLT': '铂金ETF', 'PALL': '钯金ETF',
+            'DBC': '德银商品指数ETF', 'GSG': 'iShares标普高盛商品ETF', 'GCC': 'GreenHaven连续商品ETF',
+            'EFA': 'MSCI欧澳远东ETF', 'EZU': 'MSCI欧元区ETF', 'EWU': 'MSCI英国ETF',
+            'EWG': 'MSCI德国ETF', 'EWQ': 'MSCI法国ETF', 'EWI': 'MSCI意大利ETF',
+            'EWP': 'MSCI西班牙ETF', 'EWC': 'MSCI加拿大ETF', 'EWJ': 'MSCI日本ETF',
+            'EEM': 'MSCI新兴市场ETF', 'EMXC': '新兴市场(除中)ETF', 'EWY': 'MSCI韩国ETF',
+            'EWS': 'MSCI新加坡ETF', 'EIDO': 'MSCI印尼ETF', 'EZA': 'MSCI南非ETF',
+            'EWM': 'MSCI马来西亚ETF', 'INDA': 'MSCI印度ETF', 'ARGT': 'MSCI阿根廷ETF',
+            'VNM': '越南ETF', 'EWW': 'MSCI墨西哥ETF', 'EWZ': 'MSCI巴西ETF', 'EWT': 'MSCI台湾ETF',
+            'MCHI': 'MSCI中国ETF', 'FXI': '中国大盘股ETF', 'KWEB': '中国海外互联网ETF', 'ASHR': '沪深300ETF',
+            'XAU': '现货黄金', 'XAG': '现货白银', 'XPT': '现货铂金', 'XPD': '现货钯金',
+            'COPPER': '铜期货', 'ALUMINUM': '铝期货',
+            'WTI': 'WTI原油', 'BRENT': '布伦特原油', 'NATGAS': '天然气',
+            'BTC': '比特币', 'ETH': '以太坊', 'SOL': 'Solana',
+            'VIX': '恐慌指数', 'DXY': '美元指数', 'US10Y': '美国10年期国债',
+            'US02Y': '美国2年期国债', 'US30Y': '美国30年期国债',
+            'T10Y2Y': '美债10Y-2Y利差', 'HY_OAS': '高收益债利差'
+        };
+
+        async function fetchData() {
+            const container = document.getElementById('container');
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <div>正在加载市场数据...</div>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/data');
+                const data = await response.json();
+                
+                if (data.error) throw new Error(data.error);
+                
+                currentData = data;
+                renderTable();
+                
+                document.getElementById('currentDate').textContent = new Date().toLocaleDateString('zh-CN');
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('zh-CN');
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="error">
+                        ❌ 数据加载失败<br>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+            }
+        }
+
+        function renderTable() {
+            const container = document.getElementById('container');
+            let html = '';
+
+            for (const [section, tickers] of Object.entries(etfConfig)) {
+                html += `
+                    <div class="section">
+                        <div class="section-header">${section}</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>代码</th>
+                                    <th>名称</th>
+                                    <th>价格</th>
+                                    <th>1D%</th>
+                                    <th>50D%</th>
+                                    <th>REL5</th>
+                                    <th>REL20</th>
+                                    <th>趋势</th>
+                                    <th style="text-align:right">YTD%</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+                for (const ticker of tickers) {
+                    const d = currentData[ticker] || {};
+                    const price = d.price || 0;
+                    const change1d = d.change1d || 0;
+                    const change50d = d.change50d || 0;
+                    const rel5 = d.rel5 || 0;
+                    const rel20 = d.rel20 || 0;
+                    const ytd = d.ytd || 0;
+
+                    const priceStr = price >= 1000 ? price.toFixed(2) : price >= 1 ? price.toFixed(2) : price.toFixed(4);
+
+                    html += `
+                        <tr>
+                            <td class="ticker">${ticker}</td>
+                            <td class="name">${etfNames[ticker] || ''}</td>
+                            <td class="price">${priceStr}</td>
+                            <td class="change ${change1d >= 0 ? 'positive' : 'negative'}">${change1d >= 0 ? '+' : ''}${change1d.toFixed(2)}%</td>
+                            <td class="change ${change50d >= 0 ? 'positive' : 'negative'}">${change50d >= 0 ? '+' : ''}${change50d.toFixed(2)}%</td>
+                            <td class="change ${rel5 >= 0 ? 'positive' : 'negative'}">${rel5 >= 0 ? '+' : ''}${rel5.toFixed(2)}%</td>
+                            <td class="change ${rel20 >= 0 ? 'positive' : 'negative'}">${rel20 >= 0 ? '+' : ''}${rel20.toFixed(2)}%</td>
+                            <td>${generateSparkline(d.sparkline || [])}</td>
+                            <td class="ytd ${ytd >= 0 ? 'positive' : 'negative'}">${ytd >= 0 ? '+' : ''}${ytd.toFixed(2)}%</td>
+                        </tr>`;
+                }
+
+                html += '</tbody></table></div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        function generateSparkline(data) {
+            if (!data || data.length < 2) return '';
+            
+            const width = 60;
+            const height = 25;
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min || 1;
+            
+            const points = data.map((value, index) => {
+                const x = (index / (data.length - 1)) * width;
+                const y = height - ((value - min) / range) * height;
+                return `${x.toFixed(1)},${y.toFixed(1)}`;
+            }).join(' ');
+            
+            const color = data[data.length - 1] >= data[0] ? '#00d084' : '#ff4757';
+            
+            return `<svg class="sparkline" viewBox="0 0 60 25">
+                <polyline fill="none" stroke="${color}" stroke-width="1.5" points="${points}"/>
+            </svg>`;
+        }
+
+        let currentData = {};
+        fetchData();
+        setInterval(fetchData, 60000);
+    </script>
+</body>
+</html>
