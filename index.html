@@ -141,7 +141,7 @@
         th:last-child { text-align: right; }
         
         td {
-            padding: 6px;
+            padding: 10px 6px;
             border-bottom: 1px solid var(--border-color);
             vertical-align: middle;
         }
@@ -157,8 +157,8 @@
         .name {
             color: var(--text-secondary);
             font-size: 11px;
-            max-width: 300px;
-            line-height: 1.4;
+            line-height: 1.5;
+            min-width: 150px;
         }
         
         .name .ename {
@@ -166,13 +166,21 @@
             color: var(--text-primary);
             font-size: 12px;
             display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
         }
         
         .name .cdesc {
             font-size: 10px;
             color: var(--text-muted);
-            margin-top: 2px;
+            margin-top: 3px;
             display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
         }
         
         .price {
@@ -237,11 +245,30 @@
         }
         
         @media (max-width: 768px) {
-            .main-header h1 { font-size: 20px; }
+            .main-header h1 { font-size: 18px; }
             .header-desc { font-size: 11px; }
-            .section-title { font-size: 11px; }
-            .name { max-width: 100px; }
-            th, td { padding: 4px; font-size: 10px; }
+            .section-title { font-size: 12px; }
+            .name { 
+                min-width: 100px;
+                max-width: 140px;
+            }
+            .name .ename {
+                font-size: 11px;
+                max-width: 140px;
+            }
+            .name .cdesc {
+                display: none;
+            }
+            th, td { 
+                padding: 12px 6px;
+                font-size: 11px;
+            }
+            th:first-child, td:first-child {
+                padding-left: 10px;
+            }
+            .ticker { font-size: 13px; }
+            .price { font-size: 12px; }
+            .sparkline { width: 35px; height: 16px; }
         }
     </style>
 </head>
