@@ -467,24 +467,25 @@
             
             for (const [sectionName, sectionData] of Object.entries(sections)) {
                 html += `
-                    <div class="section">
+                    <div class="section" style="display:flex;flex-direction:column">
                         <div class="section-title">${sectionName}</div>
                         <div class="section-desc">${sectionData.desc}</div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>代码</th>
-                                    <th>名称</th>
-                                    <th>价格</th>
-                                    <th>1D%</th>
-                                    <th>50D%</th>
-                                    <th>REL5</th>
-                                    <th>REL20</th>
-                                    <th>Trend</th>
-                                    <th style="text-align:right">YTD%</th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
+                        <div style="overflow-x:auto;width:100%">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>代码</th>
+                                        <th>名称</th>
+                                        <th>价格</th>
+                                        <th>1D%</th>
+                                        <th>50D%</th>
+                                        <th>REL5</th>
+                                        <th>REL20</th>
+                                        <th>Trend</th>
+                                        <th style="text-align:right">YTD%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
                 
                 for (const ticker of sectionData.items) {
                     const d = currentData[ticker] || {};
@@ -516,7 +517,7 @@
                         </tr>`;
                 }
                 
-                html += '</tbody></table></div>';
+                html += '</tbody></table></div></div>';
             }
             
             document.getElementById('container').innerHTML = html;
