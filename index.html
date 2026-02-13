@@ -5,45 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>市场追踪看板 - Market Watchlist</title>
     <style>
+        /* CSS 变量定义 */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #ffffff;
+            --bg-header: #1a1a2e;
+            --bg-table-header: #f0f0f0;
+            --bg-hover: #f8f8f8;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-muted: #888888;
+            --border-color: #e0e0e0;
+            --border-light: #f0f0f0;
+            --accent-color: #FFB800;
+            --accent-gradient: linear-gradient(90deg, #FFB800 0%, #FF9500 100%);
+            --positive: #10b981;
+            --negative: #ef4444;
+            --ticker-color: #1a1a2e;
+        }
+        
+        /* 暗色模式 */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #0a0a0a;
+                --bg-secondary: #141414;
+                --bg-card: #141414;
+                --bg-header: #000000;
+                --bg-table-header: #1a1a1a;
+                --bg-hover: #1a1a1a;
+                --text-primary: #e0e0e0;
+                --text-secondary: #aaaaaa;
+                --text-muted: #666666;
+                --border-color: #333333;
+                --border-light: #222222;
+                --accent-color: #FFB800;
+                --accent-gradient: linear-gradient(90deg, #FFB800 0%, #FF9500 100%);
+                --positive: #00d084;
+                --negative: #ff4757;
+                --ticker-color: #ffffff;
+            }
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: #0a0a0a;
-            color: #e0e0e0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.4;
             font-size: 13px;
+            transition: background 0.3s ease, color 0.3s ease;
         }
+        
         .header {
-            background: #000;
+            background: var(--bg-header);
             color: #fff;
             padding: 15px 20px;
-            border-bottom: 3px solid #FFB800;
+            border-bottom: 3px solid var(--accent-color);
         }
+        
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
         }
+        
         .header h1 {
             font-size: 24px;
             font-weight: 700;
             color: #fff;
             letter-spacing: 1px;
         }
+        
         .header-meta {
             display: flex;
             gap: 20px;
             font-size: 12px;
             color: #888;
         }
+        
         .header-meta span {
             display: flex;
             align-items: center;
             gap: 5px;
         }
+        
         .refresh-btn {
-            background: #FFB800;
+            background: var(--accent-color);
             color: #000;
             border: none;
             padding: 6px 16px;
@@ -52,19 +102,23 @@
             font-size: 12px;
             font-weight: 600;
         }
+        
         .refresh-btn:hover {
-            background: #ffcc00;
+            filter: brightness(1.1);
         }
+        
         .container {
             max-width: 100%;
             padding: 0;
         }
+        
         .section {
             margin-bottom: 2px;
-            background: #141414;
+            background: var(--bg-card);
         }
+        
         .section-header {
-            background: linear-gradient(90deg, #FFB800 0%, #FF9500 100%);
+            background: var(--accent-gradient);
             color: #000;
             padding: 8px 15px;
             font-weight: 700;
@@ -72,56 +126,67 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+        
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
         }
+        
         th {
-            background: #1a1a1a;
+            background: var(--bg-table-header);
             padding: 10px 8px;
             text-align: left;
             font-size: 11px;
             font-weight: 600;
-            color: #888;
-            border-bottom: 1px solid #333;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
             white-space: nowrap;
         }
+        
         th:last-child { text-align: right; }
+        
         td {
             padding: 8px;
-            border-bottom: 1px solid #222;
+            border-bottom: 1px solid var(--border-light);
             vertical-align: middle;
         }
-        tr:hover { background: #1a1a1a; }
+        
+        tr:hover { background: var(--bg-hover); }
+        
         .ticker {
             font-weight: 700;
-            color: #fff;
+            color: var(--ticker-color);
             font-size: 13px;
         }
+        
         .name {
-            color: #888;
+            color: var(--text-secondary);
             font-size: 11px;
             max-width: 200px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+        
         .price {
             font-weight: 600;
             font-family: 'Courier New', monospace;
-            color: #fff;
+            color: var(--text-primary);
             font-size: 13px;
         }
+        
         .change {
             font-weight: 600;
             font-family: 'Courier New', monospace;
             font-size: 12px;
         }
-        .positive { color: #00d084; }
-        .negative { color: #ff4757; }
-        .neutral { color: #888; }
+        
+        .positive { color: var(--positive); }
+        .negative { color: var(--negative); }
+        
         .sparkline { width: 60px; height: 25px; }
+        
         .ytd {
             text-align: right;
             font-weight: 600;
@@ -129,34 +194,52 @@
             padding-right: 10px;
             font-size: 12px;
         }
+        
         .loading {
             text-align: center;
             padding: 100px 20px;
-            color: #666;
+            color: var(--text-muted);
         }
+        
         .loading-spinner {
-            border: 3px solid #333;
-            border-top: 3px solid #FFB800;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--accent-color);
             border-radius: 50%;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
+        
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .error {
             text-align: center;
             padding: 100px 20px;
-            color: #ff4757;
+            color: var(--negative);
         }
+        
         .footer {
             text-align: center;
             padding: 20px;
-            color: #555;
+            color: var(--text-muted);
             font-size: 11px;
-            background: #000;
-            border-top: 1px solid #222;
+            background: var(--bg-header);
+            border-top: 1px solid var(--border-color);
         }
+        
+        /* 手动切换按钮（可选） */
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid #666;
+            color: #888;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+        
         @media (max-width: 768px) {
             .header h1 { font-size: 18px; }
             .header-meta { font-size: 10px; gap: 10px; }
@@ -172,12 +255,14 @@
     <div class="header">
         <div class="header-top">
             <h1>📊 MARKET WATCHLIST</h1>
-            <button class="refresh-btn" onclick="fetchData()">🔄 刷新</button>
+            <div>
+                <button class="refresh-btn" onclick="fetchData()">🔄 刷新</button>
+            </div>
         </div>
         <div class="header-meta">
             <span>📅 <span id="currentDate">--</span></span>
             <span>⏱️ 更新: <span id="lastUpdate">--</span></span>
-            <span>📈 数据源: Yahoo Finance / Stooq</span>
+            <span>🎨 自动主题</span>
         </div>
     </div>
     
@@ -193,7 +278,6 @@
     </div>
 
     <script>
-        // ETF 配置
         const etfConfig = {
             '全球市场': ['ACWI', 'VT', 'ACWX'],
             '美国市场': ['VTI', 'SPY', 'QQQ'],
@@ -229,6 +313,8 @@
             'US02Y': '美国2年期国债', 'US30Y': '美国30年期国债',
             'T10Y2Y': '美债10Y-2Y利差', 'HY_OAS': '高收益债利差'
         };
+
+        let currentData = {};
 
         async function fetchData() {
             const container = document.getElementById('container');
@@ -330,14 +416,16 @@
                 return `${x.toFixed(1)},${y.toFixed(1)}`;
             }).join(' ');
             
-            const color = data[data.length - 1] >= data[0] ? '#00d084' : '#ff4757';
-            
+            // 使用 CSS 变量颜色
             return `<svg class="sparkline" viewBox="0 0 60 25">
-                <polyline fill="none" stroke="${color}" stroke-width="1.5" points="${points}"/>
-            </svg>`;
+                <polyline fill="none" stroke="currentColor" stroke-width="1.5" points="${points}" style="color: inherit;">
+                    <animate attributeName="stroke" values="var(--positive);var(--negative)" dur="0.01s" fill="freeze" calcMode="discrete">
+                        <set attributeName="stroke" to="var(--positive)" begin="0s" ${data[data.length-1] >= data[0] ? '' : 'max="0s"'}/>
+                    </animate>
+                </polyline>
+            </svg>`.replace('stroke="currentColor"', `stroke="${data[data.length-1] >= data[0] ? 'var(--positive)' : 'var(--negative)'}"`);
         }
 
-        let currentData = {};
         fetchData();
         setInterval(fetchData, 60000);
     </script>
