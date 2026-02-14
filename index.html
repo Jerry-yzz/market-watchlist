@@ -203,6 +203,7 @@
             font-weight: 600;
             font-family: 'Courier New', monospace;
             font-size: 12px;
+            color: var(--text-primary);
         }
         
         .change {
@@ -214,12 +215,12 @@
         }
         
         .positive { 
-            color: var(--positive); 
+            color: #1e7e34; 
             background: var(--positive-bg);
         }
         
         .negative { 
-            color: var(--negative); 
+            color: #bd2130; 
             background: var(--negative-bg);
         }
         
@@ -260,6 +261,16 @@
             text-align: center;
             padding: 50px;
             color: var(--text-muted);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .positive { 
+                color: #00d084; 
+            }
+            
+            .negative { 
+                color: #ff4757; 
+            }
         }
         
         @media (max-width: 768px) {
