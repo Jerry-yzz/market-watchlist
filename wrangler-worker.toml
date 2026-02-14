@@ -1,0 +1,7 @@
+name = "market-watchlist-api"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[observability]
+enabled = true
+head_sampling_rate = 1
