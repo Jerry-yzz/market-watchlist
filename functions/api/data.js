@@ -1,6 +1,5 @@
-// Cloudflare Pages Function - 返回所有资产数据
+// Cloudflare Pages Function - 返回所有资产数据（已清理重复字段）
 export async function onRequest() {
-  // 所有 68 个资产的数据
   const data = {
     // 全球市场 (3)
     ACWI: { price: 146.26, change1d: 0.42, change50d: 3.23, rel5: -0.78, rel20: 0.87, ytd: 17.83, sparkline: genSpark(145, 5) },
@@ -27,33 +26,33 @@ export async function onRequest() {
     EWU: { price: 26.87, change1d: 0.38, change50d: 3.73, rel5: -0.22, rel20: 1.92, ytd: 4.36, sparkline: genSpark(27, 2) },
     EWG: { price: 43.84, change1d: 0.91, change50d: 8.18, rel5: 0.23, rel20: -0.24, ytd: 11.35, sparkline: genSpark(43, 3) },
     EWQ: { price: 56.51, change1d: 0.67, change50d: 6.29, rel5: -0.39, rel20: 1.03, ytd: 7.45, sparkline: genSpark(56, 2) },
-    EWI: { price: 46.76, change1d: 0.30, change50d: 4.69, rel5: 0.22, rel20: 0.39, rel20: 2.47, ytd: 4.00, sparkline: genSpark(47, 2) },
+    EWI: { price: 46.76, change1d: 0.30, change50d: 4.69, rel5: 0.22, rel20: 2.47, ytd: 4.00, sparkline: genSpark(47, 2) },
     EWP: { price: 50.91, change1d: 0.75, change50d: 5.89, rel5: 0.12, rel20: 1.81, ytd: 3.98, sparkline: genSpark(51, 2) },
     EWC: { price: 45.55, change1d: -1.79, change50d: 5.37, rel5: -0.85, rel20: -0.28, ytd: 3.00, sparkline: genSpark(46, 2) },
     EWJ: { price: 53.41, change1d: 0.66, change50d: 4.75, rel5: -0.96, rel20: 1.50, ytd: 2.80, sparkline: genSpark(53, 2) },
     
     // 新兴市场 (13)
     EEM: { price: 50.96, change1d: 0.70, change50d: 12.20, rel5: 1.06, rel20: 4.42, ytd: 11.37, sparkline: genSpark(50, 3) },
-    EMXC: { price: 31.01, change1d: 3.05, change50d: 15.05, rel5: 3.22, rel20: 8.47, rel20: 6.15, ytd: 15.46, sparkline: genSpark(30, 3) },
-    EWY: { price: 56.03, change1d: 4.64, change50d: 5.76, rel5: -2.6, rel20: -0.44, rel20: -8.91, ytd: 4.20, sparkline: genSpark(56, 4) },
-    EWS: { price: 22.08, change1d: -0.92, change50d: 2.10, rel5: -2.39, rel20: 0.95, rel20: -3.08, ytd: 3.04, sparkline: genSpark(22, 1) },
-    EIDO: { price: 17.91, change1d: 1.08, change50d: -4.90, rel5: 0.29, rel20: -2.95, rel20: -2.55, ytd: -4.27, sparkline: genSpark(18, 1) },
-    EZA: { price: 12.78, change1d: -1.16, change50d: 7.11, rel5: 3.35, rel20: 1.62, rel20: 4.63, ytd: 8.71, sparkline: genSpark(13, 1) },
-    EWM: { price: 20.75, change1d: 1.76, change50d: 1.57, rel5: -0.05, rel20: -0.14, rel20: 0.74, ytd: 3.03, sparkline: genSpark(21, 1) },
-    INDA: { price: 55.32, change1d: 3.09, change50d: -2.67, rel5: -0.67, rel20: -1.31, rel20: -3.86, ytd: -1.56, sparkline: genSpark(55, 3) },
-    ARGT: { price: 23.22, change1d: 1.22, change50d: -0.88, rel5: 0.22, rel20: -2.25, rel20: -2.96, ytd: 1.30, sparkline: genSpark(23, 1) },
-    VNM: { price: 16.57, change1d: -1.08, change50d: 1.14, rel5: 0.72, rel20: -0.60, rel20: -2.54, ytd: -1.24, sparkline: genSpark(17, 1) },
-    EWW: { price: 60.60, change1d: 2.79, change50d: 17.24, rel5: 3.25, rel20: 8.01, rel20: 0.16, ytd: 8.80, sparkline: genSpark(60, 4) },
-    EWZ: { price: 30.80, change1d: 1.45, change50d: 4.77, rel5: -1.25, rel20: -4.26, rel20: -2.42, ytd: 2.63, sparkline: genSpark(31, 2) },
-    EWT: { price: 67.18, change1d: 3.65, change50d: 8.68, rel5: 0.58, rel20: -0.25, rel20: 2.42, ytd: 7.65, sparkline: genSpark(67, 4) },
+    EMXC: { price: 31.01, change1d: 3.05, change50d: 15.05, rel5: 3.22, rel20: 6.15, ytd: 15.46, sparkline: genSpark(30, 3) },
+    EWY: { price: 56.03, change1d: 4.64, change50d: 5.76, rel5: -2.6, rel20: -8.91, ytd: 4.20, sparkline: genSpark(56, 4) },
+    EWS: { price: 22.08, change1d: -0.92, change50d: 2.10, rel5: -2.39, rel20: -3.08, ytd: 3.04, sparkline: genSpark(22, 1) },
+    EIDO: { price: 17.91, change1d: 1.08, change50d: -4.90, rel5: 0.29, rel20: -2.55, ytd: -4.27, sparkline: genSpark(18, 1) },
+    EZA: { price: 12.78, change1d: -1.16, change50d: 7.11, rel5: 3.35, rel20: 4.63, ytd: 8.71, sparkline: genSpark(13, 1) },
+    EWM: { price: 20.75, change1d: 1.76, change50d: 1.57, rel5: -0.05, rel20: 0.74, ytd: 3.03, sparkline: genSpark(21, 1) },
+    INDA: { price: 55.32, change1d: 3.09, change50d: -2.67, rel5: -0.67, rel20: -3.86, ytd: -1.56, sparkline: genSpark(55, 3) },
+    ARGT: { price: 23.22, change1d: 1.22, change50d: -0.88, rel5: 0.22, rel20: -2.96, ytd: 1.30, sparkline: genSpark(23, 1) },
+    VNM: { price: 16.57, change1d: -1.08, change50d: 1.14, rel5: 0.72, rel20: -2.54, ytd: -1.24, sparkline: genSpark(17, 1) },
+    EWW: { price: 60.60, change1d: 2.79, change50d: 17.24, rel5: 3.25, rel20: 0.16, ytd: 8.80, sparkline: genSpark(60, 4) },
+    EWZ: { price: 30.80, change1d: 1.45, change50d: 4.77, rel5: -1.25, rel20: -2.42, ytd: 2.63, sparkline: genSpark(31, 2) },
+    EWT: { price: 67.18, change1d: 3.65, change50d: 8.68, rel5: 0.58, rel20: 2.42, ytd: 7.65, sparkline: genSpark(67, 4) },
     
-    // 中国市场 (6) - 新增上证指数和恒生指数
+    // 中国市场 (6)
     SSE: { price: 3347.32, change1d: 0.22, change50d: -1.34, rel5: 0.8, rel20: -0.5, ytd: -1.75, sparkline: genSpark(3350, 100) },
     HSI: { price: 22601.55, change1d: 0.22, change50d: 11.16, rel5: -1.0, rel20: 5.8, ytd: 20.83, sparkline: genSpark(22000, 800) },
-    MCHI: { price: 68.45, change1d: -0.44, change50d: -3.84, rel5: -4.59, rel20: -0.62, rel20: -0.66, ytd: 0.66, sparkline: genSpark(69, 3) },
-    FXI: { price: 33.02, change1d: -0.99, change50d: -2.44, rel5: -5.25, rel20: -0.73, rel20: -0.44, ytd: 3.81, sparkline: genSpark(33, 2) },
-    KWEB: { price: 32.82, change1d: -0.79, change50d: -1.29, rel5: -2.60, rel20: 2.23, rel20: 3.40, ytd: 3.79, sparkline: genSpark(33, 2) },
-    ASHR: { price: 33.84, change1d: -0.34, change50d: 3.09, rel5: -3.14, rel20: -0.57, rel20: 0.48, ytd: 4.98, sparkline: genSpark(34, 2) },
+    MCHI: { price: 68.45, change1d: -0.44, change50d: -3.84, rel5: -4.59, rel20: -0.66, ytd: 0.66, sparkline: genSpark(69, 3) },
+    FXI: { price: 33.02, change1d: -0.99, change50d: -2.44, rel5: -5.25, rel20: -0.44, ytd: 3.81, sparkline: genSpark(33, 2) },
+    KWEB: { price: 32.82, change1d: -0.79, change50d: -1.29, rel5: -2.60, rel20: 3.40, ytd: 3.79, sparkline: genSpark(33, 2) },
+    ASHR: { price: 33.84, change1d: -0.34, change50d: 3.09, rel5: -3.14, rel20: 0.48, ytd: 4.98, sparkline: genSpark(34, 2) },
     
     // 贵金属现货 (4)
     XAU: { price: 5040.80, change1d: 2.38, change50d: 15.2, rel5: 2.1, rel20: 9.5, ytd: 72.67, sparkline: genSpark(4900, 200) },
@@ -62,8 +61,8 @@ export async function onRequest() {
     XPD: { price: 1377.00, change1d: -1.99, change50d: 16.52, rel5: 3.9, rel20: -6.4, ytd: 1.80, sparkline: genSpark(1350, 100) },
     
     // 工业金属 (2)
-    COPPER: { price: 5.96, change1d: 7.01, change50d: 6.20, rel5: 1.2, rel20: 5.35, rel20: 4.44, ytd: 0.40, sparkline: genSpark(5.5, 0.8) },
-    ALUMINUM: { price: 3084.00, change1d: 0.57, change50d: 7.02, rel5: 2.5, rel20: 6.02, rel20: 4.35, ytd: 6.37, sparkline: genSpark(3000, 150) },
+    COPPER: { price: 5.96, change1d: 7.01, change50d: 6.20, rel5: 1.2, rel20: 4.44, ytd: 0.40, sparkline: genSpark(5.5, 0.8) },
+    ALUMINUM: { price: 3084.00, change1d: 0.57, change50d: 7.02, rel5: 2.5, rel20: 4.35, ytd: 6.37, sparkline: genSpark(3000, 150) },
     
     // 能源 (3)
     WTI: { price: 64.95, change1d: 0.68, change50d: 6.61, rel5: 1.2, rel20: 4.5, ytd: 2.13, sparkline: genSpark(64, 4) },
@@ -81,8 +80,8 @@ export async function onRequest() {
     US10Y: { price: 4.96, change1d: -0.12, change50d: 4.64, rel5: 0.8, rel20: 0.7, ytd: -5.65, sparkline: genSpark(5.0, 0.3) },
     US02Y: { price: 3.59, change1d: 0.56, change50d: 5.28, rel5: 1.5, rel20: 3.2, ytd: -5.63, sparkline: genSpark(3.5, 0.3) },
     US30Y: { price: 5.01, change1d: -0.40, change50d: 3.73, rel5: 0.9, rel20: 0.8, ytd: -4.98, sparkline: genSpark(5.0, 0.3) },
-    T10Y2Y: { price: 1004.00, change1d: 2.03, change50d: 6.26, rel5: -5.2, rel20: 4.02, rel20: -0.66, ytd: 4.95, sparkline: genSpark(1000, 50) },
-    HY_OAS: { price: 633.00, change1d: -1.70, change50d: -1.80, rel5: -1.7, rel20: -6.7, rel20: -1.95, ytd: 3.30, sparkline: genSpark(640, 30) }
+    T10Y2Y: { price: 1004.00, change1d: 2.03, change50d: 6.26, rel5: -5.2, rel20: -0.66, ytd: 4.95, sparkline: genSpark(1000, 50) },
+    HY_OAS: { price: 633.00, change1d: -1.70, change50d: -1.80, rel5: -1.7, rel20: -1.95, ytd: 3.30, sparkline: genSpark(640, 30) }
   };
   
   return new Response(JSON.stringify(data), {
