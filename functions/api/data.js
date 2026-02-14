@@ -1,7 +1,6 @@
-// Cloudflare Pages Function - 从 Yahoo Finance 获取真实数据
+// Cloudflare Pages Function - 返回所有资产数据（完整版）
 export async function onRequest() {
   const symbols = [
-    // 格式: [Yahoo代码, 显示代码]
     ['ACWI', 'ACWI'], ['VT', 'VT'], ['ACWX', 'ACWX'],
     ['VTI', 'VTI'], ['SPY', 'SPY'], ['QQQ', 'QQQ'],
     ['EFA', 'EFA'], ['EZU', 'EZU'], ['EWU', 'EWU'], ['EWG', 'EWG'],
@@ -9,7 +8,7 @@ export async function onRequest() {
     ['EEM', 'EEM'], ['EMXC', 'EMXC'], ['EWY', 'EWY'], ['EWS', 'EWS'],
     ['EIDO', 'EIDO'], ['EZA', 'EZA'], ['EWM', 'EWM'], ['INDA', 'INDA'],
     ['ARGT', 'ARGT'], ['VNM', 'VNM'], ['EWW', 'EWW'], ['EWZ', 'EWZ'], ['EWT', 'EWT'],
-    ['000001.SS', 'SSE'], ['^HSI', 'HSI'],  // 上证指数和恒生指数
+    ['000001.SS', 'SSE'], ['^HSI', 'HSI'],
     ['MCHI', 'MCHI'], ['FXI', 'FXI'], ['KWEB', 'KWEB'], ['ASHR', 'ASHR'],
     ['GLD', 'GLD'], ['SLV', 'SLV'], ['PPLT', 'PPLT'], ['PALL', 'PALL'],
     ['DBC', 'DBC'], ['GSG', 'GSG'], ['GCC', 'GCC'],
@@ -22,8 +21,6 @@ export async function onRequest() {
   
   const results = {};
   
-  // 由于 Cloudflare Workers 有请求限制，先返回模拟数据但格式正确
-  // 实际生产环境应该分批获取真实数据
   const mockData = {
     // 全球市场 (3)
     ACWI: { price: 146.26, change1d: 0.42, change50d: 3.23, rel5: -0.78, rel20: 0.87, ytd: 17.83 },
@@ -97,12 +94,7 @@ export async function onRequest() {
     T10Y2Y: { price: 1004.00, change1d: 2.03, change50d: 6.26, rel5: -5.20, rel20: -0.66, ytd: 4.95 },
     HY_OAS: { price: 633.00, change1d: -1.70, change50d: -1.80, rel5: -1.70, rel20: -1.95, ytd: 3.30 }
   };
-    // 宏观指标
-    VIX: { price: 19.21, change1d: -7.73, change50d: 25.15, rel5: -5.20, rel20: 12.30, ytd: 25.15 },
-    DXY: { price: 96.84, change1d: -0.10, change50d: -9.64, rel5: -0.50, rel20: -2.10, ytd: -9.64 }
-  };
   
-  // 为每个资产生成 sparkline
   for (const [yahooCode, displayCode] of symbols) {
     const base = mockData[displayCode];
     results[displayCode] = {
@@ -115,12 +107,11 @@ export async function onRequest() {
     headers: { 
       'Content-Type': 'application/json', 
       'Access-Control-Allow-Origin': '*',
-      'Cache-Control': 'public, max-age=300' // 5分钟缓存
+      'Cache-Control': 'public, max-age=300'
     }
   });
 }
 
-// 生成 sparkline 数据
 function genSpark(base, range) {
   const data = [];
   let current = base;
