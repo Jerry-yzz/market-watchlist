@@ -55,8 +55,8 @@ export async function onRequest() {
     EWZ: { price: 30.80, change1d: 1.45, change50d: 4.77, rel5: -1.25, rel20: -2.42, ytd: 2.63 },
     EWT: { price: 67.18, change1d: 3.65, change50d: 8.68, rel5: 0.58, rel20: 2.42, ytd: 7.65 },
     // 中国市场 (6)
-    SSE: { price: 3347.32, change1d: 0.22, change50d: -1.34, rel5: 0.80, rel20: -0.50, ytd: -1.75 },
-    HSI: { price: 22601.55, change1d: 0.22, change50d: 11.16, rel5: -1.00, rel20: 5.80, ytd: 20.83 },
+    SSE: { price: 4082.07, change1d: -1.26, change50d: 2.35, rel5: 0.50, rel20: 3.20, ytd: -1.85 },
+    HSI: { price: 22620.15, change1d: 0.08, change50d: 11.50, rel5: -0.80, rel20: 6.20, ytd: 21.10 },
     MCHI: { price: 68.45, change1d: -0.44, change50d: -3.84, rel5: -4.59, rel20: -0.66, ytd: 0.66 },
     FXI: { price: 33.02, change1d: -0.99, change50d: -2.44, rel5: -5.25, rel20: -0.44, ytd: 3.81 },
     KWEB: { price: 32.82, change1d: -0.79, change50d: -1.29, rel5: -2.60, rel20: 3.40, ytd: 3.79 },
