@@ -47,7 +47,9 @@ export async function onRequest() {
     EWZ: { price: 30.80, change1d: 1.45, change50d: 4.77, rel5: -1.25, rel20: -4.26, rel20: -2.42, ytd: 2.63, sparkline: genSpark(31, 2) },
     EWT: { price: 67.18, change1d: 3.65, change50d: 8.68, rel5: 0.58, rel20: -0.25, rel20: 2.42, ytd: 7.65, sparkline: genSpark(67, 4) },
     
-    // 中国市场 (4)
+    // 中国市场 (6) - 新增上证指数和恒生指数
+    SSE: { price: 3347.32, change1d: 0.22, change50d: -1.34, rel5: 0.8, rel20: -0.5, ytd: -1.75, sparkline: genSpark(3350, 100) },
+    HSI: { price: 22601.55, change1d: 0.22, change50d: 11.16, rel5: -1.0, rel20: 5.8, ytd: 20.83, sparkline: genSpark(22000, 800) },
     MCHI: { price: 68.45, change1d: -0.44, change50d: -3.84, rel5: -4.59, rel20: -0.62, rel20: -0.66, ytd: 0.66, sparkline: genSpark(69, 3) },
     FXI: { price: 33.02, change1d: -0.99, change50d: -2.44, rel5: -5.25, rel20: -0.73, rel20: -0.44, ytd: 3.81, sparkline: genSpark(33, 2) },
     KWEB: { price: 32.82, change1d: -0.79, change50d: -1.29, rel5: -2.60, rel20: 2.23, rel20: 3.40, ytd: 3.79, sparkline: genSpark(33, 2) },
